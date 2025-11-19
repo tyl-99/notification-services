@@ -1,0 +1,116 @@
+{
+  "info": {
+    "name": "Notification Service API",
+    "description": "Test collection for FCM Notification Microservice",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/api/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "health"]
+        }
+      }
+    },
+    {
+      "name": "Register Token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"token\": \"test_fcm_token_12345\",\n  \"app_id\": \"trading-app\",\n  \"user_id\": \"user123\",\n  \"device_type\": \"web\",\n  \"platform\": \"chrome\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/api/register-token",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "register-token"]
+        }
+      }
+    },
+    {
+      "name": "Send to App",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"app_id\": \"trading-app\",\n  \"title\": \"💰 Trade Alert\",\n  \"body\": \"Your trade closed with profit!\",\n  \"data\": {\n    \"trade_id\": \"12345\",\n    \"profit\": 150.50\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/api/send-to-app",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "send-to-app"]
+        }
+      }
+    },
+    {
+      "name": "Send to User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": \"user123\",\n  \"app_id\": \"trading-app\",\n  \"title\": \"Account Update\",\n  \"body\": \"Your account balance has been updated\",\n  \"data\": {\n    \"balance\": 1000.00\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/api/send-to-user",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "send-to-user"]
+        }
+      }
+    },
+    {
+      "name": "Send to Device",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"token\": \"test_fcm_token_12345\",\n  \"app_id\": \"trading-app\",\n  \"title\": \"Single Device Test\",\n  \"body\": \"This is a test notification\",\n  \"data\": {\n    \"test\": true\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/api/send-notification",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "send-notification"]
+        }
+      }
+    }
+  ]
+}
+
