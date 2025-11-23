@@ -59,7 +59,16 @@ def initialize_firebase():
                 logger.info(f"Loading Firebase credentials from file: {creds_path}")
                 cred = credentials.Certificate(creds_path)
             else:
-                raise ValueError(f"Firebase credentials file not found at: {creds_path}")
+                # File not found, but check if we have JSON env var as fallback
+                if creds_json:
+                    logger.warning(f"Firebase credentials file not found at: {creds_path}, using environment variable instead")
+                    cred_dict = json.loads(creds_json)
+                    cred = credentials.Certificate(cred_dict)
+                else:
+                    raise ValueError(
+                        f"Firebase credentials file not found at: {creds_path}. "
+                        "Please upload the file to Railway or set FIREBASE_ADMIN_CREDENTIALS environment variable."
+                    )
         elif creds_json:
             logger.info("Loading Firebase credentials from environment variable")
             cred_dict = json.loads(creds_json)
