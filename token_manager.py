@@ -93,7 +93,7 @@ def get_tokens_for_app(
         user_id: Optional user identifier to filter by
         
     Returns:
-        List of FCM device tokens
+        List of unique FCM device tokens (duplicates removed)
     """
     try:
         db = get_firestore_client()
@@ -105,8 +105,17 @@ def get_tokens_for_app(
         docs = query.stream()
         tokens = [doc.to_dict()["token"] for doc in docs]
         
-        logger.info(f"Found {len(tokens)} tokens for app_id: {app_id}, user_id: {user_id}")
-        return tokens
+        # Remove duplicates (in case same token was registered multiple times)
+        unique_tokens = list(set(tokens))
+        
+        if len(tokens) != len(unique_tokens):
+            logger.warning(
+                f"Found {len(tokens) - len(unique_tokens)} duplicate token(s) "
+                f"for app_id: {app_id}, user_id: {user_id}"
+            )
+        
+        logger.info(f"Found {len(unique_tokens)} unique tokens for app_id: {app_id}, user_id: {user_id}")
+        return unique_tokens
         
     except Exception as e:
         logger.error(f"Failed to get tokens for app: {str(e)}")
@@ -125,7 +134,7 @@ def get_tokens_for_user(
         app_id: Optional app identifier to filter by
         
     Returns:
-        List of FCM device tokens
+        List of unique FCM device tokens (duplicates removed)
     """
     try:
         db = get_firestore_client()
@@ -137,8 +146,17 @@ def get_tokens_for_user(
         docs = query.stream()
         tokens = [doc.to_dict()["token"] for doc in docs]
         
-        logger.info(f"Found {len(tokens)} tokens for user_id: {user_id}, app_id: {app_id}")
-        return tokens
+        # Remove duplicates
+        unique_tokens = list(set(tokens))
+        
+        if len(tokens) != len(unique_tokens):
+            logger.warning(
+                f"Found {len(tokens) - len(unique_tokens)} duplicate token(s) "
+                f"for user_id: {user_id}, app_id: {app_id}"
+            )
+        
+        logger.info(f"Found {len(unique_tokens)} unique tokens for user_id: {user_id}, app_id: {app_id}")
+        return unique_tokens
         
     except Exception as e:
         logger.error(f"Failed to get tokens for user: {str(e)}")
